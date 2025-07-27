@@ -4,6 +4,7 @@ import sys
 import socket
 import threading
 import json
+import time
 
 WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
@@ -13,15 +14,18 @@ BALL_COUNT = 20
 ball_positions = []
 ball_state = {}
 click_counts = {}
+locked_by = {}
 player_id = None
 player_color = None
 winner_text = None
+game_end_time = None
+game_started = False
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("localhost", 5555))
 
 def listen_server():
-    global ball_state, click_counts, winner_text
+    global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
     while True:
         try:
             data = client.recv(4096)
@@ -35,6 +39,10 @@ def listen_server():
             elif msg["type"] == "state":
                 ball_state = msg["ball_state"]
                 click_counts = msg.get("click_counts", {})
+                locked_by = msg.get("locked_by", {})
+            elif msg["type"] == "start":
+                game_started = True
+                game_end_time = time.time() + 30
             elif msg["type"] == "end":
                 result = msg["result"]
                 max_score = max(result.values())
@@ -61,8 +69,18 @@ for i in range(BALL_COUNT):
 
 def draw():
     WIN.fill((255, 255, 255))
+
+    if not game_started:
+        font = pygame.font.SysFont(None, 48)
+        text = font.render("Waiting for other players...", True, (100, 100, 100))
+        rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        WIN.blit(text, rect)
+        pygame.display.update()
+        return
+
     for i, (x, y) in enumerate(ball_positions):
-        color = ball_state.get(str(i), "gray")
+        str_i = str(i)
+        color = ball_state.get(str_i, "gray")
         pygame.draw.circle(WIN, pygame.Color(color), (x, y), BALL_RADIUS)
 
         font = pygame.font.SysFont(None, 24)
@@ -70,18 +88,31 @@ def draw():
         text_rect = text.get_rect(center=(x, y))
         WIN.blit(text, text_rect)
 
-        if str(i) not in ball_state:
-            count = click_counts.get(str(i), {}).get(player_color, 0)
+        if str_i not in ball_state:
+            count = click_counts.get(str_i, {}).get(player_color, 0)
             if count > 0:
                 progress_font = pygame.font.SysFont(None, 20)
                 progress_text = progress_font.render(f"{count}/10", True, (100, 100, 100))
                 progress_rect = progress_text.get_rect(center=(x, y + BALL_RADIUS + 12))
                 WIN.blit(progress_text, progress_rect)
 
+            locked = locked_by.get(str_i)
+            if locked and locked != player_color:
+                lock_font = pygame.font.SysFont(None, 20)
+                lock_text = lock_font.render("LOCKED", True, (255, 0, 0))
+                lock_rect = lock_text.get_rect(center=(x, y - BALL_RADIUS - 10))
+                WIN.blit(lock_text, lock_rect)
+
     if player_color:
         font = pygame.font.SysFont(None, 36)
         turn_text = font.render(f"You are: {player_color}", True, (0, 0, 0))
-        WIN.blit(turn_text, (WIDTH // 2 - 100, 20))
+        WIN.blit(turn_text, (20, 20))
+
+    if game_end_time and not winner_text:
+        remaining = max(0, int(game_end_time - time.time()))
+        timer_font = pygame.font.SysFont(None, 36)
+        timer_text = timer_font.render(f"Time left: {remaining}s", True, (0, 0, 255))
+        WIN.blit(timer_text, (WIDTH - 200, 20))
 
     if winner_text:
         font = pygame.font.SysFont(None, 48)
@@ -101,10 +132,13 @@ def main():
                 pygame.quit()
                 client.close()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN and not winner_text:
+            if game_started and event.type == pygame.MOUSEBUTTONDOWN and not winner_text:
                 mx, my = pygame.mouse.get_pos()
                 for i, (x, y) in enumerate(ball_positions):
-                    if str(i) in ball_state:
+                    str_i = str(i)
+                    if str_i in ball_state:
+                        continue
+                    if str_i in locked_by and locked_by[str_i] != player_color:
                         continue
                     if (mx - x) ** 2 + (my - y) ** 2 <= BALL_RADIUS ** 2:
                         msg = json.dumps({"type": "click", "ball_id": i})

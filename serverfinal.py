@@ -4,11 +4,12 @@ import threading
 import json
 import time
 
-HOST = "localhost"
+HOST = "0.0.0.0"
 PORT = 5555
 BALL_COUNT = 20
-BALL_STATE = {}  # {ball_id: color}
-CLICK_COUNTS = {}  # {ball_id: {color: count}}
+BALL_STATE = {}
+CLICK_COUNTS = {}
+LOCKED_BY = {}
 CLIENTS = []
 COLORS = ["red", "green", "blue"]
 PLAYER_COUNT = 3
@@ -20,7 +21,8 @@ def broadcast_state():
     data = json.dumps({
         "type": "state",
         "ball_state": BALL_STATE,
-        "click_counts": CLICK_COUNTS
+        "click_counts": CLICK_COUNTS,
+        "locked_by": LOCKED_BY
     })
     for client in CLIENTS:
         try:
@@ -56,10 +58,16 @@ def handle_client(conn, addr, player_id):
                 ball_id = msg["ball_id"]
                 with lock:
                     if game_over or ball_id in BALL_STATE:
-                        continue  # already claimed or game over
+                        continue
+
+                    if ball_id in LOCKED_BY and LOCKED_BY[ball_id] != color:
+                        continue
 
                     if ball_id not in CLICK_COUNTS:
                         CLICK_COUNTS[ball_id] = {}
+
+                    if ball_id not in LOCKED_BY:
+                        LOCKED_BY[ball_id] = color
 
                     if color not in CLICK_COUNTS[ball_id]:
                         CLICK_COUNTS[ball_id][color] = 0
@@ -68,6 +76,7 @@ def handle_client(conn, addr, player_id):
 
                     if CLICK_COUNTS[ball_id][color] >= 10:
                         BALL_STATE[ball_id] = color
+                        LOCKED_BY.pop(ball_id, None)
 
                     broadcast_state()
 
@@ -97,6 +106,14 @@ def main():
         conn, addr = s.accept()
         CLIENTS.append(conn)
         threading.Thread(target=handle_client, args=(conn, addr, i)).start()
+
+    # Synchronize game start
+    time.sleep(1)
+    for client in CLIENTS:
+        try:
+            client.sendall(json.dumps({"type": "start"}).encode())
+        except:
+            pass
 
     threading.Thread(target=game_timer).start()
 
