@@ -6,6 +6,7 @@ import threading
 import json
 import time
 
+#
 WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
 PADDING = 20
