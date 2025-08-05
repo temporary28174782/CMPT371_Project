@@ -52,7 +52,7 @@ def listen_server():
                     continue  # skip empty lines
 
                 try:
-                    msg = json.loads(line.decode())
+                    msg = json.loads(line)
                 except json.JSONDecodeError as e:
                     print("JSON decode error:", e)
                     print("Bad message:", repr(line))
