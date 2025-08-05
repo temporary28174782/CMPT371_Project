@@ -55,7 +55,7 @@ python client.py
 ```
 
 The client application will launch and prompt for the server's IP address in the console.
-1.  Enter the public IP address provided by the server host.
+1.  Enter the link-local IP address provided by the server host, using ipconfig in the terminal.
 2.  Press Enter.
 3.  The Pygame window will appear, and the game will begin once all players have connected.
 
