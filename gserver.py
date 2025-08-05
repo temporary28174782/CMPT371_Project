@@ -6,7 +6,7 @@ import time
 
 HOST = "0.0.0.0"
 PORT = 5555
-BALL_COUNT = 20
+BALL_COUNT = 25
 BALL_STATE = {}
 CLICK_COUNTS = {}
 LOCKED_BY = {}
