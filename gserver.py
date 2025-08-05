@@ -6,7 +6,7 @@ import time
 
 HOST = "0.0.0.0"
 PORT = 5555
-BALL_COUNT = 25
+BALL_COUNT = 20
 BALL_STATE = {}
 CLICK_COUNTS = {}
 LOCKED_BY = {}
@@ -28,6 +28,7 @@ def broadcast_state():
         try:
             client.sendall(data.encode())
         except:
+            print("errorbroadcast")
             pass
 
 def send_end_game():
@@ -37,6 +38,7 @@ def send_end_game():
         try:
             c.sendall(data.encode())
         except:
+            print("errorsendendgame")
             pass
 
 def handle_client(conn, addr, player_id):
@@ -113,6 +115,7 @@ def main():
         try:
             client.sendall(json.dumps({"type": "start"}).encode())
         except:
+            print("error1")
             pass
 
     threading.Thread(target=game_timer).start()

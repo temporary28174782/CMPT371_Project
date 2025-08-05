@@ -11,7 +11,7 @@ WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
 PADDING = 30
 BALLS_PER_ROW = 5
-BALL_COUNT = 25
+BALL_COUNT = 20
 ball_positions = []
 ball_state = {}
 click_counts = {}
@@ -32,9 +32,11 @@ client.connect((server_ip, 5555))
 def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
     while True:
+        print("still alive")
         try:
             data = client.recv(4096*8)
             if not data:
+                print("nodata")
                 break
             msg = json.loads(data.decode())
             if msg["type"] == "init":
@@ -57,6 +59,7 @@ def listen_server():
                 else:
                     winner_text = "It's a tie!"
         except:
+            print("except triggered")
             break
 
 threading.Thread(target=listen_server, daemon=True).start()
@@ -88,9 +91,6 @@ def draw():
     for i, (x, y) in enumerate(ball_positions):
         str_i = str(i)
         color = ball_state.get(str_i, "gray")
-        print(ball_state)
-        print(click_counts)
-        print(locked_by)
         pygame.draw.circle(WIN, pygame.Color(color), (x, y), BALL_RADIUS)
 
         font = pygame.font.SysFont(None, 24)
