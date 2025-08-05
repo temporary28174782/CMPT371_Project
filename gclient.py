@@ -1,4 +1,4 @@
-
+# Imports
 import pygame
 import sys
 import socket
@@ -6,6 +6,7 @@ import threading
 import json
 import time
 
+# Global Variables
 WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
 PADDING = 20
@@ -22,11 +23,12 @@ game_end_time = None
 game_started = False
 timer = 45
 
+# Socket Initialization
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_ip = input("Enter the server IP address: ")
 client.connect((server_ip, 5555))
 
-
+# Listens to the server and interporate message type
 def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
     while True:
@@ -59,6 +61,7 @@ def listen_server():
 
 threading.Thread(target=listen_server, daemon=True).start()
 
+# Begin the gameplay
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Ball Game")
@@ -81,6 +84,7 @@ def draw():
         pygame.display.update()
         return
 
+    # Draw the Board
     for i, (x, y) in enumerate(ball_positions):
         str_i = str(i)
         color = ball_state.get(str_i, "gray")
