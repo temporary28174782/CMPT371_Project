@@ -8,7 +8,7 @@ import time
 import traceback
 
 # Global Variables
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1000, 800
 BALL_RADIUS = 40
 PADDING = 30
 BALLS_PER_ROW = 5
