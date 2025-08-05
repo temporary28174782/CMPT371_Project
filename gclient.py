@@ -61,6 +61,7 @@ def listen_server():
         except Exception as e:
             print(type(e))
             print("except triggered", e)
+            exceptprint()
             break
 
 threading.Thread(target=listen_server, daemon=True).start()
