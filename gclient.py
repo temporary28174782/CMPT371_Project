@@ -59,10 +59,16 @@ def listen_server():
                 else:
                     winner_text = "It's a tie!"
         except Exception as e:
+            print(type(e))
             print("except triggered", e)
             break
 
 threading.Thread(target=listen_server, daemon=True).start()
+
+def exceptprint():
+    print(ball_state)
+    print(click_counts)
+    print(locked_by)
 
 # Begin the gameplay
 pygame.init()
