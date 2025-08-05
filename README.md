@@ -7,7 +7,7 @@ Click-Conquer is a real-time, online multiplayer game where players compete to c
 * **Online Multiplayer:** Supports multiple players connecting to a central server from remote machines.
 * **Real-Time Gameplay:** Game state is synchronized across all clients in real-time.
 * **Concurrency Control:** Implements a locking mechanism for shared objects (the balls), ensuring only one player can attempt to capture a ball at a time.
-* **Built from Scratch:** The client-server communication is built entirely from scratch using Python's `socket` library, without any high-level networking or gaming frameworks.
+* **Low Level Implementation:** The client-server communication directly utilizes Python's `socket` library, without any high-level networking or gaming frameworks.
 
 ## Tech Description
 
