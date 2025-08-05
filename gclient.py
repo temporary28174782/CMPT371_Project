@@ -58,8 +58,8 @@ def listen_server():
                     winner_text = f"{winners[0].capitalize()} wins!"
                 else:
                     winner_text = "It's a tie!"
-        except:
-            print("except triggered")
+        except Exception as e:
+            print("except triggered", e)
             break
 
 threading.Thread(target=listen_server, daemon=True).start()
