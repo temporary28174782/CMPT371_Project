@@ -84,7 +84,7 @@ def listen_server():
 
         except Exception as e:
             print("Exception triggered in listen_server:", e)
-            print(traceback.format_exc)
+            print(traceback.format_exc())
             break
 
 
