@@ -5,6 +5,7 @@ import socket
 import threading
 import json
 import time
+import traceback
 
 # Global Variables
 WIDTH, HEIGHT = 800, 600
@@ -83,6 +84,7 @@ def listen_server():
 
         except Exception as e:
             print("Exception triggered in listen_server:", e)
+            print(traceback.format_exc)
             break
 
 
