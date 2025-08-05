@@ -12,7 +12,7 @@ CLICK_COUNTS = {}
 LOCKED_BY = {}
 CLIENTS = []
 COLORS = ["red", "green", "blue"]
-PLAYER_COUNT = 3
+PLAYER_COUNT = 2
 TIMER = 45
 lock = threading.Lock()
 game_over = False
@@ -26,7 +26,7 @@ def broadcast_state():
     })
     for client in CLIENTS:
         try:
-            client.sendall((json.dumps(data) + "\n").encode())
+            client.sendall((data + "\n").encode())
         except:
             print("errorbroadcast")
             pass
@@ -46,11 +46,11 @@ def send_end_game():
 def handle_client(conn, addr, player_id):
     global game_over
     color = COLORS[player_id]
-    conn.sendall(json.dumps({
+    conn.sendall((json.dumps({
         "type": "init",
         "player_id": player_id,
         "color": color
-    } + "\n").encode())
+    }) + "\n").encode())
 
     while True:
         try:
@@ -115,7 +115,7 @@ def main():
     time.sleep(1)
     for client in CLIENTS:
         try:
-            client.sendall(json.dumps({"type": "start"} + "\n").encode())
+            client.sendall((json.dumps({"type": "start"}) + "\n").encode())
         except:
             print("error1")
             pass
