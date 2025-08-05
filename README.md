@@ -41,7 +41,7 @@ For others on the internet to connect to your server, the host must allow **port
 The person hosting the game can simply run the server script.
 
 ```bash
-python server.py
+python gserver.py
 ```
 
 The server will start and print its public IP address to the console. Share this IP address with all players.
@@ -51,11 +51,11 @@ The server will start and print its public IP address to the console. Share this
 Each player (including the server host, if they wish to play) must run the client script.
 
 ```bash
-python client.py
+python gclient.py
 ```
 
 The client application will launch and prompt for the server's IP address in the console.
-1.  Enter the public IP address provided by the server host.
+1.  Enter the link-local IP address provided by the server host, using ipconfig in the terminal.
 2.  Press Enter.
 3.  The Pygame window will appear, and the game will begin once all players have connected.
 
@@ -65,4 +65,4 @@ The client application will launch and prompt for the server's IP address in the
 * **Your Color:** Your assigned player color is shown at the top-left of the screen.
 * **Locking a Ball:** To capture a gray ball, click on it. The first player to click a ball **locks** it. A "LOCKED" message will appear above the ball for other players, and they will be unable to interact with it.
 * **Capturing a Ball:** Once you have locked a ball, you must click it a total of **10 times** to capture it. A progress counter (`x/10`) will appear below the ball.
-* **Winning:** When the 30-second timer ends, the player whose color appears on the most balls is declared the winner!
+* **Winning:** When the 45-second timer ends, the player whose color appears on the most balls is declared the winner!
