@@ -28,7 +28,6 @@ def broadcast_state():
         try:
             client.sendall((data + "\n").encode())
         except:
-            print("errorbroadcast")
             pass
 
         
@@ -38,9 +37,8 @@ def send_end_game():
     data = json.dumps({"type": "end", "result": result})
     for c in CLIENTS:
         try:
-            c.sendall((json.dumps(data) + "\n").encode())
+            c.sendall(data + "\n").encode()
         except:
-            print("errorsendendgame")
             pass
 
 def handle_client(conn, addr, player_id):
@@ -117,7 +115,6 @@ def main():
         try:
             client.sendall((json.dumps({"type": "start"}) + "\n").encode())
         except:
-            print("error1")
             pass
 
     threading.Thread(target=game_timer).start()
