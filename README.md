@@ -46,7 +46,7 @@ python server.py
 
 The server will start and print its public IP address to the console. Share this IP address with all players.
 
-### 3. Start the Client(s)
+### 3. Start the Clients (3 players is required to begin the game)
 
 Each player (including the server host, if they wish to play) must run the client script.
 
