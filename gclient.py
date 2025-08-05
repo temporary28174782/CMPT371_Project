@@ -6,12 +6,11 @@ import threading
 import json
 import time
 
-# Constants
 WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
 PADDING = 20
 BALLS_PER_ROW = 5
-BALL_COUNT = 20
+BALL_COUNT = 25
 ball_positions = []
 ball_state = {}
 click_counts = {}
@@ -21,21 +20,12 @@ player_color = None
 winner_text = None
 game_end_time = None
 game_started = False
+timer = 45
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-while True:
-    server_ip = input("Please enter the server's IP address: ")
-    if not server_ip:
-        server_ip = "localhost" # Default to localhost if no IP is entered
-        print(f"No IP entered, trying to connect to {server_ip}...")
-    
-    try:
-        client.connect((server_ip, 9090))
-        print("Connection successful! Waiting for the game to start...")
-        break
-    except Exception as e:
-        print(f"Oh no, that didn't work. Could not connect to {server_ip}.")
-        print("Please check the IP address and make sure the server is running.")
+server_ip = input("Enter the server IP address: ")
+client.connect((server_ip, 5555))
+
 
 def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
@@ -55,7 +45,7 @@ def listen_server():
                 locked_by = msg.get("locked_by", {})
             elif msg["type"] == "start":
                 game_started = True
-                game_end_time = time.time() + 30
+                game_end_time = time.time() + timer
             elif msg["type"] == "end":
                 result = msg["result"]
                 max_score = max(result.values())
@@ -64,9 +54,7 @@ def listen_server():
                     winner_text = f"{winners[0].capitalize()} wins!"
                 else:
                     winner_text = "It's a tie!"
-        except (ConnectionAbortedError, json.JSONDecodeError) as e:
-            # If the server connection drops or if broken data is sent
-            print(f"Connection to server lost. Error: {e}")
+        except:
             break
 
 threading.Thread(target=listen_server, daemon=True).start()
@@ -139,10 +127,25 @@ def draw():
 
 def main():
     clock = pygame.time.Clock()
+    winner_display_time = None  # Track when winner text was first shown
+
     while True:
         clock.tick(60)
         draw()
+
+        # Start the timer once winner text is shown
+        if winner_text and winner_display_time is None:
+            winner_display_time = time.time()
+
+        # Wait 3 seconds after showing winner before exiting
+        if winner_display_time and time.time() - winner_display_time >= 3:
+            pygame.time.delay(3000)  # Optional: for smoother UI during delay
+            pygame.quit()
+            client.close()
+            sys.exit()
+
         for event in pygame.event.get():
+            draw()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 client.close()
