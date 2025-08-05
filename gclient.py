@@ -33,7 +33,7 @@ def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
     while True:
         try:
-            data = client.recv(4096)
+            data = client.recv(4096*8)
             if not data:
                 break
             msg = json.loads(data.decode())
@@ -89,6 +89,8 @@ def draw():
         str_i = str(i)
         color = ball_state.get(str_i, "gray")
         print(ball_state)
+        print(click_counts)
+        print(locked_by)
         pygame.draw.circle(WIN, pygame.Color(color), (x, y), BALL_RADIUS)
 
         font = pygame.font.SysFont(None, 24)
@@ -135,7 +137,6 @@ def main():
     winner_display_time = None  # Track when winner text was first shown
 
     while True:
-        print("still alive")
         clock.tick(60)
         draw()
 

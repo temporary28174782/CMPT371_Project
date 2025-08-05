@@ -50,7 +50,7 @@ def handle_client(conn, addr, player_id):
 
     while True:
         try:
-            data = conn.recv(1024)
+            data = conn.recv(4096*8)
             if not data:
                 break
             msg = json.loads(data.decode())
