@@ -88,6 +88,7 @@ def draw():
     for i, (x, y) in enumerate(ball_positions):
         str_i = str(i)
         color = ball_state.get(str_i, "gray")
+        print(ball_state)
         pygame.draw.circle(WIN, pygame.Color(color), (x, y), BALL_RADIUS)
 
         font = pygame.font.SysFont(None, 24)
@@ -134,6 +135,7 @@ def main():
     winner_display_time = None  # Track when winner text was first shown
 
     while True:
+        print("still alive")
         clock.tick(60)
         draw()
 
