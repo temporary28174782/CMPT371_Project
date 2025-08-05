@@ -9,7 +9,7 @@ import time
 # Global Variables
 WIDTH, HEIGHT = 800, 600
 BALL_RADIUS = 40
-PADDING = 20
+PADDING = 30
 BALLS_PER_ROW = 5
 BALL_COUNT = 25
 ball_positions = []
