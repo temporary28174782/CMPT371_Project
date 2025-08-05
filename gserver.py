@@ -37,7 +37,7 @@ def send_end_game():
     data = json.dumps({"type": "end", "result": result})
     for c in CLIENTS:
         try:
-            c.sendall(data + "\n").encode()
+            c.sendall((data + "\n").encode())
         except:
             pass
 

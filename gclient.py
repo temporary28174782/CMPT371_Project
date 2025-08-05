@@ -90,11 +90,6 @@ def listen_server():
 
 threading.Thread(target=listen_server, daemon=True).start()
 
-def exceptprint():
-    print(ball_state)
-    print(click_counts)
-    print(locked_by)
-
 # Begin the gameplay
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
