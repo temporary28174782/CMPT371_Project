@@ -31,38 +31,60 @@ client.connect((server_ip, 5555))
 # Listens to the server and interporate message type
 def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
+    buffer = ""
+
     while True:
-        print("still alive")
+        print("Listening for messages...")
         try:
-            data = client.recv(4096*8)
+            data = client.recv(4096)
             if not data:
-                print("nodata")
+                print("No data received. Connection closed.")
                 break
-            msg = json.loads(data.decode())
-            if msg["type"] == "init":
-                global player_id, player_color
-                player_id = msg["player_id"]
-                player_color = msg["color"]
-            elif msg["type"] == "state":
-                ball_state = msg["ball_state"]
-                click_counts = msg.get("click_counts", {})
-                locked_by = msg.get("locked_by", {})
-            elif msg["type"] == "start":
-                game_started = True
-                game_end_time = time.time() + timer
-            elif msg["type"] == "end":
-                result = msg["result"]
-                max_score = max(result.values())
-                winners = [color for color, score in result.items() if score == max_score]
-                if len(winners) == 1:
-                    winner_text = f"{winners[0].capitalize()} wins!"
-                else:
-                    winner_text = "It's a tie!"
+
+            buffer += data.decode()
+
+            # Process complete messages (split by newline)
+            while '\n' in buffer:
+                line, buffer = buffer.split('\n', 1)
+
+                if not line.strip():
+                    continue  # skip empty lines
+
+                try:
+                    msg = json.loads(line)
+                except json.JSONDecodeError as e:
+                    print("JSON decode error:", e)
+                    print("Bad message:", repr(line))
+                    continue
+
+                if msg["type"] == "init":
+                    global player_id, player_color
+                    player_id = msg["player_id"]
+                    player_color = msg["color"]
+                    print(f"Initialized: ID={player_id}, Color={player_color}")
+
+                elif msg["type"] == "state":
+                    ball_state = msg["ball_state"]
+                    click_counts = msg.get("click_counts", {})
+                    locked_by = msg.get("locked_by", {})
+                    print("Game state updated")
+
+                elif msg["type"] == "start":
+                    game_started = True
+                    game_end_time = time.time() + timer
+                    print("Game started")
+
+                elif msg["type"] == "end":
+                    result = msg["result"]
+                    max_score = max(result.values())
+                    winners = [color for color, score in result.items() if score == max_score]
+                    winner_text = f"{winners[0].capitalize()} wins!" if len(winners) == 1 else "It's a tie!"
+                    print("Game ended:", winner_text)
+
         except Exception as e:
-            print(type(e))
-            print("except triggered", e)
-            exceptprint()
+            print("Exception triggered in listen_server:", e)
             break
+
 
 threading.Thread(target=listen_server, daemon=True).start()
 
