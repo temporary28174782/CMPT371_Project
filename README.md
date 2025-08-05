@@ -65,4 +65,4 @@ The client application will launch and prompt for the server's IP address in the
 * **Your Color:** Your assigned player color is shown at the top-left of the screen.
 * **Locking a Ball:** To capture a gray ball, click on it. The first player to click a ball **locks** it. A "LOCKED" message will appear above the ball for other players, and they will be unable to interact with it.
 * **Capturing a Ball:** Once you have locked a ball, you must click it a total of **10 times** to capture it. A progress counter (`x/10`) will appear below the ball.
-* **Winning:** When the 30-second timer ends, the player whose color appears on the most balls is declared the winner!
+* **Winning:** When the 45-second timer ends, the player whose color appears on the most balls is declared the winner!
