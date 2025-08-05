@@ -26,17 +26,19 @@ def broadcast_state():
     })
     for client in CLIENTS:
         try:
-            client.sendall(data.encode())
+            client.sendall((json.dumps(data) + "\n").encode())
         except:
             print("errorbroadcast")
             pass
+
+        
 
 def send_end_game():
     result = {c: list(BALL_STATE.values()).count(c) for c in COLORS}
     data = json.dumps({"type": "end", "result": result})
     for c in CLIENTS:
         try:
-            c.sendall(data.encode())
+            c.sendall((json.dumps(data) + "\n").encode())
         except:
             print("errorsendendgame")
             pass
@@ -48,7 +50,7 @@ def handle_client(conn, addr, player_id):
         "type": "init",
         "player_id": player_id,
         "color": color
-    }).encode())
+    } + "\n").encode())
 
     while True:
         try:
@@ -113,7 +115,7 @@ def main():
     time.sleep(1)
     for client in CLIENTS:
         try:
-            client.sendall(json.dumps({"type": "start"}).encode())
+            client.sendall(json.dumps({"type": "start"} + "\n").encode())
         except:
             print("error1")
             pass
