@@ -41,7 +41,7 @@ For others on the internet to connect to your server, the host must allow **port
 The person hosting the game can simply run the server script.
 
 ```bash
-python server.py
+python gserver.py
 ```
 
 The server will start and print its public IP address to the console. Share this IP address with all players.
@@ -51,7 +51,7 @@ The server will start and print its public IP address to the console. Share this
 Each player (including the server host, if they wish to play) must run the client script.
 
 ```bash
-python client.py
+python gclient.py
 ```
 
 The client application will launch and prompt for the server's IP address in the console.
