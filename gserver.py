@@ -1,9 +1,10 @@
-
+# Includes
 import socket
 import threading
 import json
 import time
 
+# Global Variables
 HOST = "0.0.0.0"
 PORT = 5555
 BALL_COUNT = 25
@@ -17,6 +18,8 @@ TIMER = 45
 lock = threading.Lock()
 game_over = False
 
+# Functions
+# Package the current game state into a JSON object and broadcast it to all connected clients.
 def broadcast_state():
     data = json.dumps({
         "type": "state",
@@ -30,8 +33,7 @@ def broadcast_state():
         except:
             pass
 
-        
-
+# Calculates the final score, then sends an end message with the results to all clients.
 def send_end_game():
     result = {c: list(BALL_STATE.values()).count(c) for c in COLORS}
     data = json.dumps({"type": "end", "result": result})
@@ -41,6 +43,8 @@ def send_end_game():
         except:
             pass
 
+# Manages a single client connection in a dedicated thread. 
+# Including initial player info, 'click' messages, and updates the shared game state
 def handle_client(conn, addr, player_id):
     global game_over
     color = COLORS[player_id]
@@ -90,6 +94,7 @@ def handle_client(conn, addr, player_id):
 
     conn.close()
 
+# Ensuring the match concludes even if not all balls are claimed.
 def game_timer():
     global game_over
     time.sleep(TIMER)
