@@ -35,7 +35,7 @@ Click-Conquer is a real-time, online multiplayer game where players compete to c
 For others on the internet to connect to your server, the host must allow **port forwarding** on their router.
 
 * You must create a rule to forward **TCP** traffic on port **5555** to the **private (link-local) IP address** of the machine running the server.
-* For best results, have all players on the same LAN, this obviates the need for port forwarding and minimizes latency.
+* For best results, have all players on the same LAN. This obviates the need for port forwarding and minimizes latency.
 
 ### 2. Start the Server
 
@@ -45,7 +45,7 @@ The person hosting the game can simply run the server script.
 python gserver.py
 ```
 
-To obtain the server IP address, use the native terminal utility (ipconfig on windows) and relay this address to all players.
+To obtain the server IP address, use the native terminal utility (ipconfig on Windows) and relay this address to all players.
 **Note that only IPv4 addresses are supported.**
 
 ### 3. Start the Client(s)
@@ -64,7 +64,7 @@ The client application will launch and prompt for the server's IP address in the
 ## Gameplay Instructions
 
 * **Objective:** Capture more balls than any other player before the timer at the top right runs out.
-* **Your Color:** Your assigned player color is shown at the top-left of the screen.
-* **Locking a Ball:** To capture a gray ball, click on it. The first player to click a ball **locks** it. A "LOCKED" message will appear above the ball for other players, and they will be unable to interact with it.
+* **Your Colour:** Your assigned player colour is shown at the top-left of the screen.
+* **Locking a Ball:** To capture a gray ball, click on it. The first player to click a ball **permanently locks** it. A "LOCKED" message will appear above the ball for other players, and they will be unable to interact with it.
 * **Capturing a Ball:** Once you have locked a ball, you must click it a total of **10 times** to capture it. A progress counter (`x/10`) will appear below the ball.
-* **Winning:** When the 45-second timer ends or when all balls are claimed, the player whose color appears on the most balls is declared the winner!
+* **Winning:** When the 45-second timer ends or when all balls are claimed, the player whose colour appears on the most balls is declared the winner!
