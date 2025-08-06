@@ -29,7 +29,8 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_ip = input("Enter the server IP address: ")
 client.connect((server_ip, 5555))
 
-# Listens to the server and interporate message type
+# Functions
+# Continuously listens to the server and interprets message type, updates the global game state variables based on message received.
 def listen_server():
     global ball_state, click_counts, locked_by, winner_text, game_end_time, game_started
     buffer = ""
@@ -87,7 +88,6 @@ def listen_server():
             print(traceback.format_exc())
             break
 
-
 threading.Thread(target=listen_server, daemon=True).start()
 
 # Begin the gameplay
@@ -102,6 +102,8 @@ for i in range(BALL_COUNT):
     y = 100 + row * (BALL_RADIUS * 2 + PADDING)
     ball_positions.append((x, y))
 
+# Handles all rendering for the Pygame window. 
+# Draws the game balls, player color, game timer, and winner text.
 def draw():
     WIN.fill((255, 255, 255))
 
